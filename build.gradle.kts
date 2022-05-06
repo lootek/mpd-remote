@@ -20,6 +20,7 @@ repositories {
     mavenCentral()
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
     maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers") }
+    maven { url = uri("https://repo1.maven.org/maven2" ) }
 }
 
 dependencies {
@@ -31,6 +32,7 @@ dependencies {
     implementation("io.ktor:ktor-client-apache-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-host-common-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-webjars-jvm:$ktor_version")
+    implementation("net.thejavashop:javampd:6.0.0")
     implementation("org.webjars:jquery:3.2.1")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
     implementation("io.ktor:ktor-server-html-builder-jvm:$ktor_version")

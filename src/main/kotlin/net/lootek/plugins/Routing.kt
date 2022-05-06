@@ -1,15 +1,14 @@
 package net.lootek.plugins
 
-import io.ktor.server.plugins.*
-import io.ktor.server.routing.*
 import io.ktor.http.*
-import io.ktor.server.locations.*
-import io.ktor.server.http.content.*
-import io.ktor.server.webjars.*
-import java.time.*
 import io.ktor.server.application.*
+import io.ktor.server.http.content.*
+import io.ktor.server.locations.*
+import io.ktor.server.plugins.autohead.*
 import io.ktor.server.response.*
-import io.ktor.server.request.*
+import io.ktor.server.routing.*
+import io.ktor.server.webjars.*
+import net.lootek.mpd.initMPDController
 
 fun Application.configureRouting() {
     install(AutoHeadResponse)
@@ -20,10 +19,16 @@ fun Application.configureRouting() {
         path = "/webjars" //defaults to /webjars
     }
 
+    val mpd = initMPDController()
+
     routing {
-        get("/") {
-            call.respondText("Hello World!")
+        get("/stats") {
+            call.respondText(mpd.statistics(), ContentType.Text.Html)
         }
+        get("/status") {
+            call.respondText(mpd.status(), ContentType.Text.Html)
+        }
+
         get<MyLocation> {
             call.respondText("Location: name=${it.name}, arg1=${it.arg1}, arg2=${it.arg2}")
         }

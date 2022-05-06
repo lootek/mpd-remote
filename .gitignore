@@ -13,6 +13,7 @@ build/
 .springBeans
 .sts4-cache
 bin/
+lib/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
