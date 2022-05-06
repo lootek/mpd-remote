@@ -16,11 +16,17 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "net.lootek.ApplicationKt"
+    }
+}
+
 repositories {
     mavenCentral()
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
     maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers") }
-    maven { url = uri("https://repo1.maven.org/maven2" ) }
+    maven { url = uri("https://repo1.maven.org/maven2") }
 }
 
 dependencies {
