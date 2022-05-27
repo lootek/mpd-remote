@@ -31,17 +31,16 @@ fun Application.configureRouting() {
             call.respondText(mpd.status(), ContentType.Text.Html)
         }
         get("/videos") {
-            val request =
-                youtube.Builder.build()
-                    .playlistItems()
-                    .list(listOf("snippet", "contentDetails"))
+            val request = youtube.Builder.build()
+                .playlistItems()
+                .list(listOf("snippet", "contentDetails"))
 
             val response = request
                 .setMaxResults(25L)
                 .setPlaylistId("PLFn1VIsptN2J4c_yBrL-tFZ62maPvcv9J")
                 .execute()
 
-            call.respondText(response)
+            call.respondText(response.toPrettyString())
         }
 
         get<MyLocation> {
