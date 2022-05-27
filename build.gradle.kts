@@ -1,6 +1,7 @@
-val ktor_version: String by project
-val kotlin_version: String by project
-val logback_version: String by project
+val ktorVersion: String by project
+val kotlinVersion: String by project
+val logbackVersion: String by project
+val javaMPDVersion: String by project
 
 plugins {
     application
@@ -25,33 +26,36 @@ tasks.withType<Jar> {
 
 repositories {
     mavenCentral()
+    google()
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
     maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers") }
     maven { url = uri("https://repo1.maven.org/maven2") }
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-auto-head-response-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-locations-jvm:$ktor_version")
-    implementation("io.ktor:ktor-client-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-client-apache-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-host-common-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-webjars-jvm:$ktor_version")
-    implementation("net.thejavashop:javampd:6.0.0")
+    implementation("io.ktor:ktor-server-auto-head-response-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-locations-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-apache-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-webjars-jvm:$ktorVersion")
+    implementation("net.thejavashop:javampd:$javaMPDVersion")
     implementation("org.webjars:jquery:3.2.1")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
-    implementation("io.ktor:ktor-server-html-builder-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
     implementation("org.jetbrains:kotlin-css-jvm:1.0.0-pre.129-kotlin-1.4.20")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
-    implementation("io.ktor:ktor-server-core:$ktor_version")
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-    testImplementation("io.ktor:ktor-client-core:$ktor_version")
-    testImplementation("io.ktor:ktor-client-cio:$ktor_version")
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("com.google.apis:google-api-services-youtube:v3-rev20220418-1.32.1")
+    implementation("com.google.api-client:google-api-client:1.34.1")
+    testImplementation("io.ktor:ktor-client-core:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-cio:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
 }
