@@ -1,24 +1,22 @@
 package net.lootek.youtube
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
-import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.client.http.HttpRequest
 import com.google.api.client.http.HttpRequestInitializer
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
-import com.google.api.services.youtube.model.PlaylistItemListResponse
 import java.io.IOException
-import java.security.GeneralSecurityException
 
 
-object ApiExample {
+class YouTube {
     private var API_KEY = System.getenv("YOUTUBE_API_KEY") ?: "<YOUTUBE_API_KEY>"
     private val JSON_FACTORY: JsonFactory = GsonFactory.getDefaultInstance()
 
-    @get:Throws(GeneralSecurityException::class, IOException::class)
-    val YouTubeService: YouTube.Builder
+    companion object
+
+    val Builder: YouTube.Builder
         get() {
             val httpTransport: NetHttpTransport = GoogleNetHttpTransport.newTrustedTransport()
             return YouTube.Builder(httpTransport, JSON_FACTORY, HttpRequestInitializer() {
@@ -28,22 +26,4 @@ object ApiExample {
                 }
             })
         }
-
-    @Throws(
-        GeneralSecurityException::class,
-        IOException::class,
-        GoogleJsonResponseException::class
-    )
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val youtubeService = YouTubeService
-
-        val request: YouTube.PlaylistItems.List = youtubeService.build().playlistItems()
-            .list(listOf("snippet", "contentDetails"))
-        val response: PlaylistItemListResponse = request
-            .setMaxResults(25L)
-            .setPlaylistId("PLFn1VIsptN2J4c_yBrL-tFZ62maPvcv9J")
-            .execute()
-        System.out.println(response)
-    }
 }

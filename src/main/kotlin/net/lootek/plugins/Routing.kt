@@ -8,7 +8,8 @@ import io.ktor.server.plugins.autohead.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.webjars.*
-import net.lootek.mpd.initMPDController
+import net.lootek.mpd.MPDController
+import net.lootek.youtube.YouTube
 
 fun Application.configureRouting() {
     install(AutoHeadResponse)
@@ -19,7 +20,8 @@ fun Application.configureRouting() {
         path = "/webjars" //defaults to /webjars
     }
 
-    val mpd = initMPDController()
+    val mpd = MPDController()
+    val youtube = YouTube()
 
     routing {
         get("/stats") {
@@ -27,6 +29,19 @@ fun Application.configureRouting() {
         }
         get("/status") {
             call.respondText(mpd.status(), ContentType.Text.Html)
+        }
+        get("/videos") {
+            val request =
+                youtube.Builder.build()
+                    .playlistItems()
+                    .list(listOf("snippet", "contentDetails"))
+
+            val response = request
+                .setMaxResults(25L)
+                .setPlaylistId("PLFn1VIsptN2J4c_yBrL-tFZ62maPvcv9J")
+                .execute()
+
+            call.respondText(response)
         }
 
         get<MyLocation> {
@@ -51,6 +66,7 @@ fun Application.configureRouting() {
 
 @Location("/location/{name}")
 class MyLocation(val name: String, val arg1: Int = 42, val arg2: String = "default")
+
 @Location("/type/{name}")
 data class Type(val name: String) {
     @Location("/edit")
