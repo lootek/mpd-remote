@@ -54,6 +54,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("com.google.apis:google-api-services-youtube:v3-rev20220418-1.32.1")
     implementation("com.google.api-client:google-api-client:1.34.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
     testImplementation("io.ktor:ktor-client-core:$ktorVersion")
     testImplementation("io.ktor:ktor-client-cio:$ktorVersion")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
