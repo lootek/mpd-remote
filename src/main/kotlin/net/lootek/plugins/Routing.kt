@@ -8,9 +8,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.webjars.*
 import net.lootek.mpd.MPD
+import net.lootek.mpd.addAndPlay
 import net.lootek.mpd.statistics
 import net.lootek.mpd.status
-import net.lootek.youtube.*
+import net.lootek.youtube.YouTube
+import net.lootek.youtube.ytdlURL
 
 fun Application.configureRouting() {
     install(AutoHeadResponse)
@@ -34,22 +36,13 @@ fun Application.configureRouting() {
         }
 
         get<YouTubeLocation> {
-            when (it.choice) {
-                // id: playlistID
-                "url" -> call.respondText(ytdlURL(youtube.getVideoFromPlaylist(it.id).first().id()))
-                "title" -> call.respondText(ytdlURL(youtube.getVideoFromPlaylist(it.id).first().title()))
-                "details" -> call.respondText(youtube.getVideoFromPlaylist(it.id).first().toPrettyString())
-
-                // id: videoID
-//                "play" -> mpd.addAndPlay(ytdlURL(it.id))
-                "play" -> call.respondText(ytdlURL(it.id))
-            }
+            mpd.addAndPlay(ytdlURL(it.id))
         }
     }
 }
 
-@Location("/youtube/{id}/{choice}")
-class YouTubeLocation(val id: String, val choice: String = "details")
+@Location("/youtube/{id}/play")
+class YouTubeLocation(val id: String)
 
 @Location("/mpd/{choice}")
 class MPDLocation(val choice: String = "status")
