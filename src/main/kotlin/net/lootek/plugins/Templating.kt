@@ -15,10 +15,16 @@ fun Application.configureTemplating() {
     data class Playlist(val id: String, val channel: Channel, val video: Video)
 
     val youtube = YouTube()
-    val playlists: MutableList<Playlist> = mutableListOf()
+    val channels: MutableMap<String, MutableList<Playlist>> = mutableMapOf()
     for (playlistID in listOf(
         "PLFn1VIsptN2J4c_yBrL-tFZ62maPvcv9J",
-    )) {
+        "PLFn1VIsptN2JqIV0kOafVnVrVdK9_dlR8",
+        "PLFn1VIsptN2IJDBuNrbTH5wJgfmau1WQw",
+        "PLXUja6BNv4Jw40HWItm8G3VV0DcgzEpti",
+        "UUs7O9sOUQiBGBxaaAguIwig",
+
+        )) {
+        val playlists = channels[youtube.getPlaylist(playlistID).channelID()] ?: mutableListOf()
         playlists.add(
             Playlist(
                 playlistID,
@@ -30,8 +36,9 @@ fun Application.configureTemplating() {
                     youtube.getPlaylist(playlistID).firstVideo().id(),
                     youtube.getPlaylist(playlistID).firstVideo().title(),
                 ),
-            ),
+            )
         )
+        channels[youtube.getPlaylist(playlistID).channelID()] = playlists
     }
 
     routing {
@@ -39,19 +46,28 @@ fun Application.configureTemplating() {
             call.respondHtml {
                 head {
                     link(rel = "stylesheet", href = "/styles.css", type = "text/css")
-                    title = "mpd remote"
+                    title("mpd remote")
                 }
 
                 body {
                     ul {
-                        for (p in playlists) {
+                        for ((_, playlists) in channels) {
                             li {
+                                val p = playlists[0]
                                 span {
                                     +"${p.channel.title}"
                                 }
-                                a {
-                                    href = "youtube/${p.video.id}/play"
-                                    +"${p.video.title}"
+                                br {}
+
+                                ul {
+                                    for (i in playlists.indices) {
+                                        li {
+                                            a {
+                                                href = "youtube/${p.video.id}/play"
+                                                +"${p.video.title}"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
