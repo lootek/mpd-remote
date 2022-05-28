@@ -23,7 +23,7 @@ class YouTube {
             }
     }
 
-    fun getVideoFromPlaylist(playlistID: String): PlaylistItemListResponse {
+    fun getPlaylist(playlistID: String): PlaylistItemListResponse {
         val request = Builder
             .setApplicationName("mpd-remote")
             .build()
@@ -38,6 +38,8 @@ class YouTube {
     }
 }
 
-fun PlaylistItemListResponse.first(): PlaylistItem = this.items[0]
+fun PlaylistItemListResponse.channelID(): String = this.firstVideo().snippet.channelId
+fun PlaylistItemListResponse.channelTitle(): String = this.firstVideo().snippet.channelTitle
+fun PlaylistItemListResponse.firstVideo(): PlaylistItem = this.items[0]
 fun PlaylistItem.id(): String = this.snippet.resourceId.videoId
 fun PlaylistItem.title(): String = this.snippet.title

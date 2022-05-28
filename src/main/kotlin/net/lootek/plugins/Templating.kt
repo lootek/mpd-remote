@@ -7,14 +7,12 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.css.*
 import kotlinx.html.*
-import net.lootek.youtube.YouTube
-import net.lootek.youtube.first
-import net.lootek.youtube.id
-import net.lootek.youtube.title
+import net.lootek.youtube.*
 
 fun Application.configureTemplating() {
+    data class Channel(val id: String, val title: String)
     data class Video(val id: String, val title: String)
-    data class Playlist(val id: String, val video: Video)
+    data class Playlist(val id: String, val channel: Channel, val video: Video)
 
     val youtube = YouTube()
     val playlists: MutableList<Playlist> = mutableListOf()
@@ -24,9 +22,13 @@ fun Application.configureTemplating() {
         playlists.add(
             Playlist(
                 playlistID,
+                Channel(
+                    youtube.getPlaylist(playlistID).channelID(),
+                    youtube.getPlaylist(playlistID).channelTitle(),
+                ),
                 Video(
-                    youtube.getVideoFromPlaylist(playlistID).first().id(),
-                    youtube.getVideoFromPlaylist(playlistID).first().title(),
+                    youtube.getPlaylist(playlistID).firstVideo().id(),
+                    youtube.getPlaylist(playlistID).firstVideo().title(),
                 ),
             ),
         )
@@ -37,11 +39,16 @@ fun Application.configureTemplating() {
             call.respondHtml {
                 head {
                     link(rel = "stylesheet", href = "/styles.css", type = "text/css")
+                    title = "mpd remote"
                 }
+
                 body {
                     ul {
                         for (p in playlists) {
                             li {
+                                span {
+                                    +"${p.channel.title}"
+                                }
                                 a {
                                     href = "youtube/${p.video.id}/play"
                                     +"${p.video.title}"
