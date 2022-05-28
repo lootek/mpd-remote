@@ -53,9 +53,8 @@ fun Application.configureTemplating() {
                     ul {
                         for ((_, playlists) in channels) {
                             li {
-                                val p = playlists[0]
                                 span {
-                                    +"${p.channel.title}"
+                                    +"${playlists[0].channel.title}"
                                 }
                                 br {}
 
@@ -63,8 +62,8 @@ fun Application.configureTemplating() {
                                     for (i in playlists.indices) {
                                         li {
                                             a {
-                                                href = "youtube/${p.video.id}/play"
-                                                +"${p.video.title}"
+                                                href = "youtube/${playlists[i].video.id}/play"
+                                                +"${playlists[i].video.title}"
                                             }
                                         }
                                     }
