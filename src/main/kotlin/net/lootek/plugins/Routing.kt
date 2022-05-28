@@ -10,6 +10,8 @@ import io.ktor.server.routing.*
 import io.ktor.server.webjars.*
 import net.lootek.mpd.MPDController
 import net.lootek.youtube.YouTube
+import net.lootek.youtube.first
+import net.lootek.youtube.url
 
 fun Application.configureRouting() {
     install(AutoHeadResponse)
@@ -24,26 +26,29 @@ fun Application.configureRouting() {
     val youtube = YouTube()
 
     routing {
-        get("/stats") {
-            call.respondText(mpd.statistics(), ContentType.Text.Html)
-        }
-        get("/status") {
-            call.respondText(mpd.status(), ContentType.Text.Html)
-        }
-        get("/videos") {
-            call.respondText(youtube.getFirstVideoFromPlaylist("PLFn1VIsptN2J4c_yBrL-tFZ62maPvcv9J"))
+        get<MPDLocation> {
+            when (it.choice) {
+                "stats" -> call.respondText(mpd.statistics(), ContentType.Text.Html)
+                "status" -> call.respondText(mpd.status(), ContentType.Text.Html)
+            }
+
         }
 
-        get<MyLocation> {
-            call.respondText("Location: name=${it.name}, arg1=${it.arg1}, arg2=${it.arg2}")
+        get<YouTubeLocation> {
+            when (it.choice) {
+                "url" -> call.respondText(youtube.getVideoFromPlaylist(it.id).first().url())
+                "details" -> call.respondText(youtube.getVideoFromPlaylist(it.id).first().toPrettyString())
+            }
         }
-        // Register nested routes
-        get<Type.Edit> {
-            call.respondText("Inside $it")
-        }
-        get<Type.List> {
-            call.respondText("Inside $it")
-        }
+
+//        // Register nested routes
+//        get<Type.Edit> {
+//            call.respondText("Inside $it")
+//        }
+//        get<Type.List> {
+//            call.respondText("Inside $it")
+//        }
+
         // Static plugin. Try to access `/static/index.html`
         static("/static") {
             resources("static")
@@ -54,14 +59,17 @@ fun Application.configureRouting() {
     }
 }
 
-@Location("/location/{name}")
-class MyLocation(val name: String, val arg1: Int = 42, val arg2: String = "default")
+@Location("/youtube/{id}/{choice}")
+class YouTubeLocation(val id: String, val choice: String = "details")
 
-@Location("/type/{name}")
-data class Type(val name: String) {
-    @Location("/edit")
-    data class Edit(val type: Type)
+@Location("/mpd/{choice}")
+class MPDLocation(val choice: String = "status")
 
-    @Location("/list/{page}")
-    data class List(val type: Type, val page: Int)
-}
+//@Location("/type/{name}")
+//data class Type(val name: String) {
+//    @Location("/edit")
+//    data class Edit(val type: Type)
+//
+//    @Location("/list/{page}")
+//    data class List(val type: Type, val page: Int)
+//}
