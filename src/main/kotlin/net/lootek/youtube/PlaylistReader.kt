@@ -40,3 +40,4 @@ class YouTube {
 
 fun PlaylistItemListResponse.first(): PlaylistItem = this.items[0]
 fun PlaylistItem.id(): String = this.snippet.resourceId.videoId
+fun PlaylistItem.title(): String = this.snippet.title

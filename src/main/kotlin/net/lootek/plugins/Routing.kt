@@ -2,20 +2,15 @@ package net.lootek.plugins
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.http.content.*
 import io.ktor.server.locations.*
 import io.ktor.server.plugins.autohead.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.webjars.*
 import net.lootek.mpd.MPD
-import net.lootek.mpd.addAndPlay
 import net.lootek.mpd.statistics
 import net.lootek.mpd.status
-import net.lootek.youtube.YouTube
-import net.lootek.youtube.first
-import net.lootek.youtube.id
-import net.lootek.youtube.ytdlURL
+import net.lootek.youtube.*
 
 fun Application.configureRouting() {
     install(AutoHeadResponse)
@@ -40,28 +35,15 @@ fun Application.configureRouting() {
 
         get<YouTubeLocation> {
             when (it.choice) {
+                // id: playlistID
                 "url" -> call.respondText(ytdlURL(youtube.getVideoFromPlaylist(it.id).first().id()))
+                "title" -> call.respondText(ytdlURL(youtube.getVideoFromPlaylist(it.id).first().title()))
                 "details" -> call.respondText(youtube.getVideoFromPlaylist(it.id).first().toPrettyString())
-                "play" -> mpd.addAndPlay(ytdlURL(youtube.getVideoFromPlaylist(it.id).first().id()))
-            }
-        }
 
-        static("/") {
-            staticBasePackage = "static"
-            resource("index.html")
-            defaultResource("index.html")
-            static("images") {
-                resource("ktor_logo.png")
-                resource("image.png", "ktor_logo.png")
+                // id: videoID
+//                "play" -> mpd.addAndPlay(ytdlURL(it.id))
+                "play" -> call.respondText(ytdlURL(it.id))
             }
-            static("assets") {
-                resources("css")
-                resources("js")
-            }
-        }
-        
-        get("/webjars") {
-            call.respondText("<script src='/webjars/jquery/jquery.js'></script>", ContentType.Text.Html)
         }
     }
 }
