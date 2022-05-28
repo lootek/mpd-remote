@@ -12,18 +12,21 @@ import com.google.api.services.youtube.model.PlaylistItemListResponse
 
 class YouTube {
     private var apiKey = System.getenv("YOUTUBE_API_KEY") ?: "<YOUTUBE_API_KEY>"
-    private val jsonFactory: JsonFactory = GsonFactory.getDefaultInstance()
 
-    companion object
+    companion object {
+        private val jsonFactory: JsonFactory = GsonFactory.getDefaultInstance()
 
-    val Builder: YouTube.Builder
-        get() {
-            val httpTransport: NetHttpTransport = GoogleNetHttpTransport.newTrustedTransport()
-            return YouTube.Builder(httpTransport, jsonFactory, HttpRequestInitializer() {})
-        }
+        val Builder: YouTube.Builder
+            get() {
+                val httpTransport: NetHttpTransport = GoogleNetHttpTransport.newTrustedTransport()
+                return YouTube.Builder(httpTransport, jsonFactory, HttpRequestInitializer() {})
+            }
+    }
 
     fun getVideoFromPlaylist(playlistID: String): PlaylistItemListResponse {
-        val request = Builder.build()
+        val request = Builder
+            .setApplicationName("mpd-remote")
+            .build()
             .playlistItems()
             .list(listOf("snippet", "contentDetails"))
 
@@ -36,4 +39,4 @@ class YouTube {
 }
 
 fun PlaylistItemListResponse.first(): PlaylistItem = this.items[0]
-fun PlaylistItem.url(): String = this.snippet.resourceId.videoId
+fun PlaylistItem.id(): String = this.snippet.resourceId.videoId

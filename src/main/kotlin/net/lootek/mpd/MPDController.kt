@@ -2,18 +2,25 @@ package net.lootek.mpd
 
 import org.bff.javampd.server.MPD
 
-class MPDController {
+class MPD {
     companion object {
-        val mpd: MPD = MPD.Builder().server("192.168.10.18").build()
+        val Builder: MPD.Builder
+            get() {
+                return MPD.Builder().server("192.168.10.18")
+            }
     }
+}
 
-    fun status(): String {
-        val status = mpd.serverStatus
-        return "${status.state} ${status.volume}"
-    }
+fun MPD.addAndPlay(file: String) {
+    this.playlist.addSong(file, true)
+}
 
-    fun statistics(): String {
-        val stats = mpd.serverStatistics
-        return "${stats.uptime}"
-    }
+fun MPD.status(): String {
+    val status = this.serverStatus
+    return "${status.state} ${status.volume}"
+}
+
+fun MPD.statistics(): String {
+    val stats = this.serverStatistics
+    return "${stats.uptime}"
 }
