@@ -21,6 +21,7 @@ fun String.runCommand(workingDir: File = File(".")): String {
     }
 }
 
-fun ytdlURL(id: String): String {
-    return "youtube-dl --get-url -- $id".runCommand()
+fun ytdlURL(id: String): List<String> {
+    val res = "youtube-dl --get-url -- $id".runCommand()
+    return res.lines()
 }

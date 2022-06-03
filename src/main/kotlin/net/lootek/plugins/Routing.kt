@@ -36,7 +36,9 @@ fun Application.configureRouting() {
         }
 
         get<YouTubeLocation> {
-            mpd.addAndPlay(ytdlURL(it.id))
+            for (url in ytdlURL(it.id)) {
+                mpd.addAndPlay(url)
+            }
         }
     }
 }

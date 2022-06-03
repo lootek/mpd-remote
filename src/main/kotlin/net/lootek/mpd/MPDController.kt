@@ -12,7 +12,7 @@ class MPD {
 }
 
 fun MPD.addAndPlay(file: String) {
-    this.playlist.addSong("\"$file\"", true)
+    this.playlist.addSong(file, true)
 }
 
 fun MPD.status(): String {
